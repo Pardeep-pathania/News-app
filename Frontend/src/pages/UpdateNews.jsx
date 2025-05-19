@@ -49,7 +49,7 @@ const UpdateNews = () => {
     axios.put(`http://localhost:3000/api/news/update/${state._id}`, payload, { headers: header })
       .then((res) => {
         alert("News updated successfully!")
-        navigate('/admin-dashboard')  // Redirect to admin dashboard after update
+        navigate('/admindashboard') 
       })
       .catch((err) => {
         console.log(err.response || err.message)

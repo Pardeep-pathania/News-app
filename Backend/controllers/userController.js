@@ -51,6 +51,30 @@ let updateUser = async (req, res) => {
   res.status(201).json({ message: "user Updated", updatedUser });
 };
 
+let makeAdmin = async(req,res)=>{
+
+  const userId = req.params.id;
+  try {
+    // Find the user by ID
+    const user = await Users.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User  not found' });
+    }
+    // Check if the user is already an admin
+    if (user.isAdmin) {
+      return res.status(400).json({ message: 'User  is already an admin' });
+    }
+    // Update the user's admin status
+    user.isAdmin = true;
+    await user.save();
+    return res.status(200).json({ message: 'User  promoted to admin', user });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+}
+
 let deleteUser = (req, res) => {
   let id = req.query.id;
 
@@ -69,4 +93,5 @@ module.exports = {
   loginUser,
   updateUser,
   deleteUser,
+  makeAdmin
 };
