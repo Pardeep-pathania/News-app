@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Users = require('./userModel');
 
 const newsSchema = new mongoose.Schema({
     image:{
@@ -14,6 +15,7 @@ const newsSchema = new mongoose.Schema({
     },
     author:{
         type:mongoose.Schema.Types.ObjectId,
+        ref: Users,
         required:true
     }
 },{timestamps:true});

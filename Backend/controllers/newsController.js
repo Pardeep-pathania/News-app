@@ -1,7 +1,7 @@
 const News = require("../models/newsModel");
 
 const getAllnews = async(req,res)=>{
-    let data = await News.find();
+    let data = await News.find().populate("author","name");
     res.status(200).send(data);
 }
 

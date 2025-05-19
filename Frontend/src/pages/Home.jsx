@@ -16,6 +16,7 @@ export default function NewsApp() {
     axios.get("http://localhost:3000/api/news")
     .then((res)=>{
       setNewsData(res.data)
+      console.log(res.data)
     })
     .catch((err)=>{
       console.log(err)
@@ -35,28 +36,37 @@ export default function NewsApp() {
           Top Headlines
         </h2>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {newsData.map(({ id, title, description, image, url }) => (
-            <article
-              key={id}
-              className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
-            >
+          {newsData.map(({ id, title, description, image, url, createdAt,author }) => (
+           <article
+  key={id}
+  className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+>
+  <img
+    src={image}
+    alt={title} // More descriptive alt text
+    className="w-full h-40 object-cover"
+    onError={(e) => { e.target.src = 'path/to/default-image.jpg'; }} // Fallback image
+  />
+  <div className="p-4 flex flex-col flex-grow">
+    <h3 className="text-lg font-semibold mb-2 text-slate-900">Author: {author.name}</h3>
+    <h3 className="text-lg font-semibold mb-2 line-clamp-2">{title}</h3>
+    <p className="text-gray-600 flex-grow line-clamp-3">{description}</p>
+    <p className="text-gray-400 text-sm mb-2">
+     Published on: {new Date(createdAt).toLocaleDateString("en-US", {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })}
+    </p>
+    <a
+      href={url}
+      className="mt-4 text-blue-600 hover:underline font-semibold"
+    >
+      Read more
+    </a>
+  </div>
+</article>
 
-              <img
-                src={image}
-                alt={`News ${id}`}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-lg font-semibold mb-2 line-clamp-2">{title}</h3>
-                <p className="text-gray-600 flex-grow line-clamp-3">{description}</p>
-                <a
-                  href={url}
-                  className="mt-4 text-blue-600 hover:underline font-semibold"
-                >
-                  Read more
-                </a>
-              </div>
-            </article>
           ))}
         </section>
       </main>

@@ -7,13 +7,13 @@ async function checkLogin(req,res,next){
         let header = req.headers.authorization;
         if(!header){
             return res.status(401).json({
-                message:"Unauthorized"
+                message:"Unauthorized! header not provided"
             })
         }
         let token = header.split(" ")[1];
         if(!token){
             return res.status(401).json({
-                message:"Unauthorised"
+                message:"Unauthorised! no token provided"
             })
         }
         let {userId} = jwt.verify(token,"thisisyourprivatekey");

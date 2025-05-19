@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CreateNews from "./pages/CreateNews";
 import UserContext from "./UserContext";
 import NotFound from "./pages/NotFound";
+import UpdateNews from "./pages/UpdateNews";
 
 const App = () => {
   const { user, login } = useContext(UserContext);
@@ -29,8 +30,10 @@ const App = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         {user && user.isAdmin && <Route path="/admindashboard" element={<AdminDashboard/>} />}
+        {user && user.isAdmin && <Route path="/create-news" element={<CreateNews />} />}
+        {user && user.isAdmin && <Route path="/updatenews" element={<UpdateNews/>} />}
         
-        <Route path="/create-news" element={<CreateNews />} />
+        
         <Route path="*" element = {<NotFound/>}/>
       </Routes>
       </>
