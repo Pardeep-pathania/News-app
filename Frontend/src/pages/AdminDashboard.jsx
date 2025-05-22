@@ -31,10 +31,10 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  function deleteNews(id) {
+  function deleteNews(id, publicId) {
     const userdata = JSON.parse(localStorage.getItem('userdata'));
     const header = { Authorization: `Bearer ${userdata.token}` };
-    axios.delete(`http://localhost:3000/api/news/delete/${id}`, { headers: header })
+    axios.delete(`http://localhost:3000/api/news/delete/${id}`, { headers: header, params:{publicId: publicId} })
       .then((res) => {
         console.log(res);
         setNewsList(newsList.filter((news) => news._id !== id));
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {newsList.map(({ _id, title, description, image }) => (
               <div key={_id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                <img src={image} alt={title} className="w-full h-48 object-cover" />
+                <img src={image.imageUrl} alt={title} className="w-full h-48 object-cover" />
                 <div className="p-4 flex flex-col flex-grow">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
                   <p className="text-gray-600 mb-4 flex-grow">{description}</p>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
                       Update
                     </Link>
                     <button
-                      onClick={() => deleteNews(_id)}
+                      onClick={() => deleteNews(_id,image.publicId)}
                       className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-md transition-colors duration-300"
                     >
                       Delete

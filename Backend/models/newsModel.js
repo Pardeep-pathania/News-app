@@ -3,7 +3,14 @@ const Users = require('./userModel');
 
 const newsSchema = new mongoose.Schema({
     image:{
-        type:String,
+        imageUrl:{
+            type:String,
+            required:true
+        },
+        publicId:{
+            type: String,
+            required:true
+        }
     },
     title:{
         type:String,

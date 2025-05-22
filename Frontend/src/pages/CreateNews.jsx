@@ -7,8 +7,9 @@ const CreateNews = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    image: ""
   })
+  const [image, setImage] = useState(null)
+  const [imageUrl, setImageUrl] = useState(null)
 
   const userdata = JSON.parse(localStorage.getItem("userdata"))
 
@@ -18,6 +19,15 @@ const CreateNews = () => {
       ...prevData,
       [name]: value
     }))
+  }
+
+  const handleImageChange =(e)=>{
+    const file = e.target.files[0];
+    if(file){
+      const tempUrl = URL.createObjectURL(file);
+      setImageUrl(tempUrl);
+    }
+    setImage(file)
   }
 
   const handleSubmit = (e) => {
@@ -39,9 +49,12 @@ const CreateNews = () => {
       Authorization: `Bearer ${userdata.token}`
     }
 
-    console.log(header)
+   let formdata = new FormData();
+   formdata.append("title", formData.title);
+   formdata.append("description", formData.description); 
+    formdata.append("image", image);
 
-    axios.post("http://localhost:3000/api/news/create", payload, { headers: header })
+    axios.post("http://localhost:3000/api/news/create", formdata, { headers: header })
       .then((res) => {
         console.log(res)
         alert("News created successfully!")
@@ -89,17 +102,18 @@ const CreateNews = () => {
         </div>
         <div>
           <label htmlFor="image" className="block text-gray-700 font-medium mb-1">
-            Image URL
+            Image
           </label>
           <input
-            type="url"
-            id="image"
+            type="file"
             name="image"
-            value={formData.image}
-            onChange={handleChange}
+            required
+            onChange={handleImageChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter image URL (optional)"
           />
+          <img
+          className='h-30 mt-2 rounded-lg' src={imageUrl} alt="" />
         </div>
         <button
           type="submit"

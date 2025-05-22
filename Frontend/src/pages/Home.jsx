@@ -42,7 +42,7 @@ export default function NewsApp() {
   className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
 >
   <img
-    src={image}
+    src={image.imageUrl}
     alt={title} // More descriptive alt text
     className="w-full h-40 object-cover"
     onError={(e) => { e.target.src = 'path/to/default-image.jpg'; }} // Fallback image

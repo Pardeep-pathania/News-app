@@ -1,4 +1,6 @@
+const cloudinary  = require("../config/cloudinary");
 const News = require("../models/newsModel");
+const fs = require("fs");
 
 const getAllnews = async(req,res)=>{
     let data = await News.find().populate("author","name");
@@ -13,9 +15,23 @@ const getMyNews = async(req,res)=>{
 
 const createNews = async(req,res)=>{
     let data = req.body;
-    console.log(req.user)
+   
 
-    let newNews = await News.create({...data, author:req.user._id});
+   let result = await  cloudinary.uploader.upload(req.file.path)
+
+   fs.unlinkSync(req.file.path)
+        
+   let obj ={
+    ...data,
+    image:{
+        imageUrl:result.secure_url,
+        publicId:result.public_id
+
+    },
+    author:req.user._id
+   }
+
+    let newNews = await News.create(obj);
     res.status(201).send(newNews)
 }
 
@@ -29,6 +45,10 @@ const updateNews = async(req,res)=>{
 
 const deleteNews = async(req,res)=>{
     let id = req.params.id;
+    let publicId = req.query.publicId;
+
+    await cloudinary.uploader.destroy(publicId)
+
     let deletedNews = await News.findByIdAndDelete(id)
 
     if(!deletedNews){
