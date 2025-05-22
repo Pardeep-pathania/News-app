@@ -20,7 +20,7 @@ const router = express.Router()
 router.get('/', getAllnews)
 router.get('/mynews',checkLogin,checkAdmin,  getMyNews)
 router.post('/create',upload.single("image"),checkLogin,checkAdmin,  createNews)
-router.put('/update/:id',checkLogin,checkAdmin, updateNews)
+router.put('/update/:id',upload.single("image"),checkLogin,checkAdmin, updateNews)
 router.delete('/delete/:id',checkLogin,checkAdmin,deleteNews)
 
 

@@ -6,10 +6,12 @@ const UpdateNews = () => {
   const { state } = useLocation()
   const navigate = useNavigate()
 
+  const [imageUrl,setImageUrl] = useState(state?.image?.imageUrl)
+  const [image, setImage] = useState(null)
+
   const [formData, setFormData] = useState({
     title: state?.title || '',
     description: state?.description || '',
-    image: state?.image || ''
   })
 
   const userdata = JSON.parse(localStorage.getItem("userdata"))
@@ -22,6 +24,16 @@ const UpdateNews = () => {
     }))
   }
 
+
+  const handleImageChange =(e)=>{
+    const file = e.target.files[0];
+    if(file){
+      const tempUrl = URL.createObjectURL(file);
+      setImageUrl(tempUrl);
+    }
+    setImage(file)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -29,7 +41,6 @@ const UpdateNews = () => {
       alert("You must be logged in as admin to update news.")
       return
     }
-
     if (!formData.title.trim() || !formData.description.trim()) {
       alert("Title and Description are required fields!")
       return
@@ -39,15 +50,21 @@ const UpdateNews = () => {
       title: formData.title,
       description: formData.description,
       image: formData.image,
-      author: userdata.existingUser?._id
+      author: userdata.existingUser._id 
     }
 
     const header = {
       Authorization: `Bearer ${userdata.token}`
     }
 
-    axios.put(`http://localhost:3000/api/news/update/${state._id}`, payload, { headers: header })
+   let formdata = new FormData();
+   formdata.append("title", formData.title);
+   formdata.append("description", formData.description); 
+    formdata.append("image", image);
+
+    axios.put(`http://localhost:3000/api/news/update/${state._id}`, formdata, { headers: header })
       .then((res) => {
+        console.log(res)
         alert("News updated successfully!")
         navigate('/admindashboard') 
       })
@@ -56,6 +73,7 @@ const UpdateNews = () => {
         alert(err.response?.data?.message || "Failed to update news")
       })
   }
+
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md font-sans">
@@ -96,14 +114,15 @@ const UpdateNews = () => {
             Image URL
           </label>
           <input
-            type="url"
+            type="file"
             id="image"
             name="image"
-            value={formData.image}
-            onChange={handleChange}
+            onChange={handleImageChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter image URL (optional)"
           />
+          <img
+          className='h-30 mt-2 rounded-lg' src={imageUrl} alt="" />
         </div>
         <button
           type="submit"

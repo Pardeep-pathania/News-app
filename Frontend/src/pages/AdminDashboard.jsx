@@ -90,7 +90,7 @@ const AdminDashboard = () => {
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
                   <p className="text-gray-600 mb-4 flex-grow">{description}</p>
                   <div className="flex gap-4 mt-4">
-                    <Link to={'/updatenews'} state={{_id, title, description, image }}
+                    <Link to={'/updatenews'} state={{_id, title, description, image, publicId: image?.publicId  }}
                       className=" text-center flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-colors duration-300"
                     >
                       Update
